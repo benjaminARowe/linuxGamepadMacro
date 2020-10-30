@@ -11,13 +11,23 @@ if __name__ == "__main__":
     with open('macro.json') as f:
       macro = json.load(f)
 
+    last_sec = 0
     for current_event in macro:
+        sec = current_event["sec"]
+        sleep(sec - last_sec)
+
         etype = ecodes.EV[current_event["type"]]
+        ntype = current_event["type"]
+
         code = current_event["code"]
 
-        dev.write(ecodes.EV_ABS, key, direction)
-        
-        print(current_event["sec"])
+        value = current_event["value"]
+
+        dev.write(ntype, code, value)
+        print(f"Wrote: {sec - last_sec}")
+        last_sec = sec
+
+
 
 
 

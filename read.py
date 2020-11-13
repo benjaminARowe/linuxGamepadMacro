@@ -7,6 +7,7 @@ import select
 import sys
 import time
 import json
+import argparse
 
 
 def list_active_evdev():
@@ -34,11 +35,18 @@ def list_active_evdev():
 
     return output
 
+def handle_args():
 
-if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser.add_argument('-f', "--file_name", default="meta.json")
+
+    args = parser.parse_args()
+    return args
+
+
+def record_macro(out_file):
     # Print the next /dev/input/event* device to generate an input event.
     output = list_active_evdev()
-    print(output)
 
     device = InputDevice(output[0])
 
@@ -66,10 +74,16 @@ if __name__ == "__main__":
             current_event = {"sec": sec - t, "type": event.type, "code": event.code,
                              "value": event.value}
             events.append(current_event)
-            print (event)
-            print(sec)
 
     except KeyboardInterrupt:
-        with open('macro.json', 'w') as json_file:
-              json.dump(events, json_file)
+        with open(out_file, 'w') as json_file:
+            json.dump(events, json_file)
         sys.exit()
+
+def main():
+    args = handle_args()
+
+    record_macro(args.file_name)
+
+if __name__ == "__main__":
+    main()

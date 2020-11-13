@@ -1,14 +1,12 @@
 from evdev import InputDevice, UInput, ecodes
 from time import sleep
-from read import list_active_evdev
+from read import list_active_evdev, handle_args 
 import json
 
-if __name__ == "__main__":
-    output = list_active_evdev()
-    dev = InputDevice(output[0])
+def play_macro(file_name, dev):
 
     macro = []
-    with open('macro.json') as f:
+    with open(file_name) as f:
       macro = json.load(f)
 
     last_sec = 0
@@ -24,10 +22,20 @@ if __name__ == "__main__":
         value = current_event["value"]
 
         dev.write(ntype, code, value)
-        print(f"Wrote: {sec - last_sec}")
         last_sec = sec
 
 
+
+def main():
+    args = handle_args()
+
+    output = list_active_evdev()
+    dev = InputDevice(output[0])
+
+    play_macro(args.file_name, dev)
+
+if __name__ == "__main__":
+    main()
 
 
 

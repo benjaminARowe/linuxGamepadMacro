@@ -1,2 +1,5 @@
 *.json
+!deposit_daycare.json
+!walk_daycare.json
+!receive_daycare.json
 __pycache__/*

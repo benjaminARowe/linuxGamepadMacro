@@ -3,3 +3,4 @@
 !walk_daycare.json
 !receive_daycare.json
 __pycache__/*
+Pipfile.lock
